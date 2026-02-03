@@ -52,7 +52,7 @@ const Wheel: React.FC<WheelProps> = ({
       spinAudio.current?.pause();
 
       const segmentAngle = 360 / displayData.length;
-      const pointerAngle = (360 - (newRotation % 360)) % 360;
+      const pointerAngle = (360 - (newRotation % 360) + 90) % 360;
       let winningIndex = Math.floor((pointerAngle + 0.0001) / segmentAngle);
 
       onSpinEnd(displayData[winningIndex]);
@@ -131,7 +131,7 @@ const Wheel: React.FC<WheelProps> = ({
 
               <g>
                 {displayData.map((item, i) => {
-                  const midAngle = i * segmentAngle + segmentAngle / 2;
+                  const midAngle = i * segmentAngle + segmentAngle / 2 - 90;
                   return (
                     <g
                       key={`text-group-${item.id}-${i}`}

@@ -58,27 +58,6 @@ const Sidebar: React.FC<SidebarProps> = ({
           />
         </div>
 
-        {/* Color Preview */}
-        {/* <div className="space-y-2">
-          <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider">
-            Màu sắc vòng quay
-          </h3>
-          <div className="flex flex-wrap gap-2">
-            {nameItems.map((item) => (
-              <div
-                key={item.id}
-                className="flex items-center gap-1.5 px-2 py-1 bg-white border border-slate-100 rounded-full shadow-sm text-xs font-medium text-slate-600"
-              >
-                <span
-                  className="w-3 h-3 rounded-full"
-                  style={{ backgroundColor: item.color }}
-                ></span>
-                {item.text}
-              </div>
-            ))}
-          </div>
-        </div> */}
-
         {/* Action Buttons */}
         <div className="space-y-3">
           <button
