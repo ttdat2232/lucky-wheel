@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { NameItem } from "../types";
 
 interface WheelProps {
@@ -49,17 +49,14 @@ const Wheel: React.FC<WheelProps> = ({
 
     setTimeout(() => {
       setIsSpinning(false);
-
-      if (spinAudio.current) {
-        spinAudio.current.pause();
-      }
+      spinAudio.current?.pause();
 
       const segmentAngle = 360 / displayData.length;
-      const winningIndex = Math.floor(
-        ((360 - (newRotation % 360)) % 360) / segmentAngle,
-      );
+      const pointerAngle = (360 - (newRotation % 360)) % 360;
+      let winningIndex = Math.floor((pointerAngle + 0.0001) / segmentAngle);
+
       onSpinEnd(displayData[winningIndex]);
-    }, 4000);
+    }, 4500);
   }, [isSpinning, rotation, displayData, onSpinEnd, setIsSpinning, isMuted]);
 
   const total = displayData.length;
@@ -72,8 +69,22 @@ const Wheel: React.FC<WheelProps> = ({
 
   return (
     <div className="relative w-full max-w-[500px] aspect-square mx-auto flex items-center justify-center">
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-2 z-40 filter drop-shadow-lg">
-        <svg width="40" height="40" viewBox="0 0 40 40">
+      <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 z-40 filter drop-shadow-lg">
+        {/* <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-2 z-40 filter drop-shadow-lg"> */}
+        {/* <svg width="40" height="40" viewBox="0 0 40 40">
+          <path
+            d="M20 40 L5 10 L35 10 Z"
+            fill="#ef4444"
+            stroke="#fff"
+            strokeWidth="2"
+          />
+        </svg> */}
+        <svg
+          width="40"
+          height="40"
+          viewBox="0 0 40 40"
+          style={{ transform: "rotate(90deg)" }}
+        >
           <path
             d="M20 40 L5 10 L35 10 Z"
             fill="#ef4444"

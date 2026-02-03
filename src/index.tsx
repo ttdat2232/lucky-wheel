@@ -5,18 +5,16 @@ import App from "./App";
 
 const rootElement = document.getElementById("root");
 if (!rootElement) {
-    throw new Error("Could not find root element to mount to");
+  throw new Error("Could not find root element to mount to");
 }
 
 const root = ReactDOM.createRoot(rootElement);
 root.render(
-    <React.StrictMode>
-        <BrowserRouter>
-            <Routes>
-                <Route path="/" element={<App />} />
-                <Route path="/lucky-wheel/" element={<App />} />
-                <Route path="*" element={<App />} />
-            </Routes>
-        </BrowserRouter>
-    </React.StrictMode>,
+  <React.StrictMode>
+    <BrowserRouter>
+      <Routes>
+        <Route path="*" element={<App />} />
+      </Routes>
+    </BrowserRouter>
+  </React.StrictMode>,
 );
