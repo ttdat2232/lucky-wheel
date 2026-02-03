@@ -54,7 +54,7 @@ const WinnerPopup: React.FC<WinnerPopupProps> = ({
             onClick={onClose}
             className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-xl transition-all shadow-lg shadow-indigo-200 flex items-center justify-center gap-2 group"
           >
-            Quá tuyệt vời!
+            Lượt nữa ae ây!
             <PartyPopper
               size={20}
               className="group-hover:rotate-12 transition-transform"
