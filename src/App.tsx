@@ -43,14 +43,23 @@ export const WINNER_MEME_IMAGES = [
 const WIN_SOUND_URL =
   "https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3";
 
+const DEFAULT_NAMES =
+  "Nguyễn Văn A\nTrần Thị B\nLê Văn C\nPhạm Thị D\nHoàng Văn E";
+const STORAGE_KEY = "luckwheel_names";
+const HISTORY_STORAGE_KEY = "luckwheel_history";
+
 const App: React.FC = () => {
-  const [inputText, setInputText] = useState(
-    "Nguyễn Văn A\nTrần Thị B\nLê Văn C\nPhạm Thị D\nHoàng Văn E",
-  );
+  const [inputText, setInputText] = useState(() => {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    return saved || DEFAULT_NAMES;
+  });
   const [luckyPerson, setLuckyPerson] = useState<string | null>(null);
   const [luckyMeme, setLuckyMeme] = useState<string>("");
   const [isSpinning, setIsSpinning] = useState(false);
-  const [history, setHistory] = useState<string[]>([]);
+  const [history, setHistory] = useState<string[]>(() => {
+    const saved = localStorage.getItem(HISTORY_STORAGE_KEY);
+    return saved ? JSON.parse(saved) : [];
+  });
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [showPopup, setShowPopup] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
@@ -60,6 +69,16 @@ const App: React.FC = () => {
   useEffect(() => {
     winAudio.current = new Audio(WIN_SOUND_URL);
   }, []);
+
+  // Save inputText to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, inputText);
+  }, [inputText]);
+
+  // Save history to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(history));
+  }, [history]);
 
   const nameItems = useMemo(() => {
     return inputText
