@@ -1,0 +1,33 @@
+import React from "react";
+import { Menu } from "lucide-react";
+
+interface EmptyStateProps {
+  show: boolean;
+  onOpenSidebar: () => void;
+}
+
+const EmptyState: React.FC<EmptyStateProps> = ({ show, onOpenSidebar }) => {
+  if (!show) return null;
+
+  return (
+    <div className="absolute inset-0 flex items-center justify-center bg-white/80 backdrop-blur-sm z-30">
+      <div className="bg-white p-8 rounded-2xl shadow-2xl border text-center space-y-4 max-w-sm">
+        <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto text-slate-400">
+          <Menu size={32} />
+        </div>
+        <h3 className="text-xl font-bold text-slate-800">Danh sách trống</h3>
+        <p className="text-slate-500">
+          Hãy thêm tên vào danh sách ở menu bên trái để bắt đầu!
+        </p>
+        {/* <button
+          onClick={onOpenSidebar}
+          className="px-6 py-2 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition-colors"
+        >
+          Mở cấu hình ngay
+        </button> */}
+      </div>
+    </div>
+  );
+};
+
+export default EmptyState;
