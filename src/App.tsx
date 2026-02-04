@@ -33,11 +33,11 @@ const WHEEL_COLORS = [
 ];
 
 export const MEME_IMAGES = [
-  "https://i.pinimg.com/736x/1e/9f/13/1e9f13db744cb54584e5386112721889.jpg",
+  "https://i.pinimg.com/736x/4e/af/59/4eaf59fed351916279569e565021a17f.jpg",
 ];
 
 export const WINNER_MEME_IMAGES = [
-  "https://i.pinimg.com/736x/02/0c/21/020c2108df2fe7d5894226a92b08d46e.jpg",
+  "https://i.pinimg.com/736x/7f/a1/46/7fa1461556d737376cfb3e7ac9e649c4.jpg"
 ];
 
 const WIN_SOUND_URL =
