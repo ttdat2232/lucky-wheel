@@ -1,6 +1,6 @@
 import { useWheelSpin } from "@/components/wheel/useWheelSpin";
 import { getFontSize, getSegmentAngle } from "@/components/wheel/wheelMath";
-import { NameItem } from "@/types/NameItem";
+import { NameItem } from "@/types/nameItem";
 import React from "react";
 
 interface WheelProps {
