@@ -37,7 +37,7 @@ export const MEME_IMAGES = [
 ];
 
 export const WINNER_MEME_IMAGES = [
-  "https://i.pinimg.com/736x/7f/a1/46/7fa1461556d737376cfb3e7ac9e649c4.jpg"
+  "https://i.pinimg.com/736x/7f/a1/46/7fa1461556d737376cfb3e7ac9e649c4.jpg",
 ];
 
 const WIN_SOUND_URL =
@@ -47,14 +47,27 @@ const DEFAULT_NAMES =
   "Nguyễn Văn A\nTrần Thị B\nLê Văn C\nPhạm Thị D\nHoàng Văn E";
 const STORAGE_KEY = "luckwheel_names";
 const HISTORY_STORAGE_KEY = "luckwheel_history";
+const MEME_STORAGE_KEY = "luckwheel_memes";
+const WINNER_MEME_STORAGE_KEY = "luckwheel_winner_memes";
 
 const App: React.FC = () => {
+  const [memes, setMemes] = useState<string[]>(() => {
+    const saved = localStorage.getItem(MEME_STORAGE_KEY);
+    return saved ? JSON.parse(saved) : MEME_IMAGES;
+  });
+  const [currentMemeIndex, setCurrentMemeIndex] = useState(0);
+  const currentMeme = memes[currentMemeIndex];
+
+  const [winnerMemes, setWinnerMemes] = useState<string[]>(() => {
+    const saved = localStorage.getItem(WINNER_MEME_STORAGE_KEY);
+    return saved ? JSON.parse(saved) : WINNER_MEME_IMAGES;
+  });
+
   const [inputText, setInputText] = useState(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
     return saved || DEFAULT_NAMES;
   });
   const [luckyPerson, setLuckyPerson] = useState<string | null>(null);
-  const [luckyMeme, setLuckyMeme] = useState<string>("");
   const [isSpinning, setIsSpinning] = useState(false);
   const [history, setHistory] = useState<string[]>(() => {
     const saved = localStorage.getItem(HISTORY_STORAGE_KEY);
@@ -67,15 +80,31 @@ const App: React.FC = () => {
   const winAudio = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
+    if (memes.length <= 1) return;
+
+    const interval = setInterval(() => {
+      setCurrentMemeIndex((prev) => (prev + 1) % memes.length);
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [memes]);
+
+  useEffect(() => {
+    localStorage.setItem(MEME_STORAGE_KEY, JSON.stringify(memes));
+  }, [memes]);
+
+  useEffect(() => {
+    localStorage.setItem(WINNER_MEME_STORAGE_KEY, JSON.stringify(winnerMemes));
+  }, [winnerMemes]);
+
+  useEffect(() => {
     winAudio.current = new Audio(WIN_SOUND_URL);
   }, []);
 
-  // Save inputText to localStorage whenever it changes
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, inputText);
   }, [inputText]);
 
-  // Save history to localStorage whenever it changes
   useEffect(() => {
     localStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(history));
   }, [history]);
@@ -133,10 +162,6 @@ const App: React.FC = () => {
       return lines.filter((l) => l.trim() !== "").join("\n");
     });
 
-    setLuckyMeme(
-      WINNER_MEME_IMAGES[Math.floor(Math.random() * WINNER_MEME_IMAGES.length)],
-    );
-
     setHistory((prev) => [winningName, ...prev].slice(0, 10));
     setShowPopup(true);
 
@@ -189,6 +214,16 @@ const App: React.FC = () => {
         nameItems={nameItems}
         history={history}
         clearHistory={clearHistory}
+        memes={memes}
+        addMeme={(url) => setMemes((prev) => [...prev, url])}
+        removeMeme={(index) =>
+          setMemes((prev) => prev.filter((_, i) => i !== index))
+        }
+        winnerMemes={winnerMemes}
+        addWinnerMeme={(url) => setWinnerMemes((prev) => [...prev, url])}
+        removeWinnerMemes={(index) =>
+          setWinnerMemes((prev) => prev.filter((_, i) => i !== index))
+        }
       />
 
       <main className="flex-1 flex flex-col items-center justify-center p-4 md:p-8 relative">
@@ -204,7 +239,7 @@ const App: React.FC = () => {
         </button>
 
         <div className="w-full max-w-4xl bg-white rounded-3xl shadow-xl border border-slate-200 p-8 md:p-12 flex flex-col items-center gap-10">
-          <Header />
+          <Header memeUrl={currentMeme} />
 
           <div className="w-full flex justify-center">
             <Wheel
@@ -221,7 +256,7 @@ const App: React.FC = () => {
           show={showPopup}
           onClose={closePopup}
           winner={luckyPerson}
-          memeUrl={luckyMeme}
+          memeUrl={winnerMemes[Math.floor(Math.random() * winnerMemes.length)]}
         />
       </main>
 

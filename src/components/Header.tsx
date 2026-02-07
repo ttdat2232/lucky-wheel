@@ -1,16 +1,14 @@
-import React, { useMemo } from "react";
-import { MEME_IMAGES } from "../App";
+import React from "react";
+interface HeaderProps {
+  memeUrl: string;
+}
 
-const Header: React.FC = () => {
-  const randomMeme = useMemo(() => {
-    return MEME_IMAGES[Math.floor(Math.random() * MEME_IMAGES.length)];
-  }, []);
-
+const Header: React.FC<HeaderProps> = ({ memeUrl }) => {
   return (
     <div className="w-full max-w-sm mx-auto">
       <div className="relative group">
         <img
-          src={randomMeme}
+          src={memeUrl}
           alt="Lucky Wheel Meme"
           className="w-full h-48 object-contain rounded-2xl shadow-md border-4 border-indigo-100 group-hover:border-indigo-300 transition-all"
         />

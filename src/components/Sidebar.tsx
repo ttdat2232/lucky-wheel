@@ -1,5 +1,13 @@
-import { History, Palette, Trash2, Users, X } from "lucide-react";
-import React from "react";
+import {
+  History,
+  ImagePlus,
+  Palette,
+  Trash2,
+  Users,
+  X,
+  XCircle,
+} from "lucide-react";
+import React, { useState } from "react";
 import { NameItem } from "../types";
 
 interface SidebarProps {
@@ -10,6 +18,12 @@ interface SidebarProps {
   nameItems: NameItem[];
   history: string[];
   clearHistory: () => void;
+  memes: string[];
+  addMeme: (url: string) => void;
+  removeMeme: (index: number) => void;
+  winnerMemes: string[];
+  addWinnerMeme: (url: string) => void;
+  removeWinnerMeme: (index: number) => void;
 }
 
 const Sidebar: React.FC<SidebarProps> = ({
@@ -20,7 +34,16 @@ const Sidebar: React.FC<SidebarProps> = ({
   nameItems,
   history,
   clearHistory,
+  memes,
+  addMeme,
+  removeMeme,
+  winnerMemes,
+  addWinnerMeme,
+  removeWinnerMeme,
 }) => {
+  const [memeInput, setMemeInput] = useState("");
+  const [winnerMemeInput, setWinnerMemeInput] = useState("");
+
   return (
     <aside
       className={`${isOpen ? "translate-x-0" : "-translate-x-full"} fixed inset-y-0 left-0 z-40 w-80 bg-white shadow-2xl transition-transform duration-300 ease-in-out md:relative md:translate-x-0 flex flex-col`}
@@ -97,6 +120,111 @@ const Sidebar: React.FC<SidebarProps> = ({
             </ul>
           </div>
         )}
+        {/* Meme Manager */}
+        <div className="pt-6 border-t space-y-3">
+          <label className="block text-sm font-semibold text-slate-700 flex items-center gap-2">
+            <ImagePlus size={16} className="text-indigo-500" />
+            Meme (tự đổi mỗi vài giây)
+            <span className="text-xs font-normal text-slate-400">
+              ({memes.length})
+            </span>
+          </label>
+
+          <div className="flex items-center gap-2 w-full">
+            <input
+              value={memeInput}
+              onChange={(e) => setMemeInput(e.target.value)}
+              placeholder="Dán link meme..."
+              className="min-w-0 flex-1 px-3 py-2 border rounded-lg text-sm bg-slate-50 focus:ring-2 focus:ring-indigo-500 outline-none"
+            />
+            <button
+              onClick={() => {
+                if (!memeInput.trim()) return;
+                addMeme(memeInput.trim());
+                setMemeInput("");
+              }}
+              className="shrink-0 px-3 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
+            >
+              Thêm
+            </button>
+          </div>
+
+          {/* Meme list */}
+          <ul className="space-y-2 max-h-40 overflow-y-auto">
+            {memes.map((meme, index) => (
+              <li
+                key={index}
+                className="flex items-center gap-2 p-2 bg-slate-50 rounded-lg text-xs"
+              >
+                <img
+                  src={meme}
+                  alt="meme"
+                  className="w-10 h-10 object-cover rounded"
+                />
+                <span className="flex-1 truncate text-slate-600">{meme}</span>
+                <button
+                  onClick={() => removeMeme(index)}
+                  className="text-red-500 hover:text-red-700"
+                >
+                  <XCircle size={16} />
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Winner Meme Manager */}
+        <div className="pt-6 border-t space-y-3">
+          <label className="block text-sm font-semibold text-slate-700 flex items-center gap-2">
+            <ImagePlus size={16} className="text-indigo-500" />
+            Meme khi quay trúng
+            <span className="text-xs font-normal text-slate-400">
+              ({winnerMemes.length})
+            </span>
+          </label>
+
+          <div className="flex items-center gap-2 w-full">
+            <input
+              value={winnerMemeInput}
+              onChange={(e) => setWinnerMemeInput(e.target.value)}
+              placeholder="Dán link meme..."
+              className="min-w-0 flex-1 px-3 py-2 border rounded-lg text-sm bg-slate-50 focus:ring-2 focus:ring-indigo-500 outline-none"
+            />
+            <button
+              onClick={() => {
+                if (!winnerMemeInput.trim()) return;
+                addWinnerMeme(winnerMemeInput.trim());
+                setWinnerMemeInput("");
+              }}
+              className="shrink-0 px-3 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
+            >
+              Thêm
+            </button>
+          </div>
+
+          {/* Meme list */}
+          <ul className="space-y-2 max-h-40 overflow-y-auto">
+            {winnerMemes.map((meme, index) => (
+              <li
+                key={index}
+                className="flex items-center gap-2 p-2 bg-slate-50 rounded-lg text-xs"
+              >
+                <img
+                  src={meme}
+                  alt="meme"
+                  className="w-10 h-10 object-cover rounded"
+                />
+                <span className="flex-1 truncate text-slate-600">{meme}</span>
+                <button
+                  onClick={() => removeMeme(index)}
+                  className="text-red-500 hover:text-red-700"
+                >
+                  <XCircle size={16} />
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </aside>
   );

@@ -1,5 +1,5 @@
-import React from "react";
 import { Menu } from "lucide-react";
+import React from "react";
 
 interface EmptyStateProps {
   show: boolean;
@@ -19,12 +19,6 @@ const EmptyState: React.FC<EmptyStateProps> = ({ show, onOpenSidebar }) => {
         <p className="text-slate-500">
           Hãy thêm tên vào danh sách ở menu bên trái để bắt đầu!
         </p>
-        {/* <button
-          onClick={onOpenSidebar}
-          className="px-6 py-2 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition-colors"
-        >
-          Mở cấu hình ngay
-        </button> */}
       </div>
     </div>
   );
