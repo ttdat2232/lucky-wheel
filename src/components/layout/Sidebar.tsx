@@ -62,6 +62,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
             className="w-full h-64 p-4 border rounded-xl bg-slate-50 resize-none"
+            placeholder="Ví dụ:&#10;Nguyễn Văn A&#10;Trần Thị B..."
           />
         </div>
 
