@@ -1,3 +1,13 @@
+import Header from "@/components/layout/Header";
+import Sidebar from "@/components/layout/Sidebar";
+import WinnerPopup from "@/components/popup/WinnerPopup";
+import Wheel from "@/components/wheel/Wheel";
+import { WHEEL_COLORS } from "@/constants/colors";
+import { DefaultData } from "@/constants/defaultData";
+import { StorageKey } from "@/constants/storageKeys";
+import { useAutoRotate } from "@/hooks/useAutoRotate";
+import { useLocalStorageState } from "@/hooks/useLocalStorageState";
+import { NameItem } from "@/types/nameItem";
 import confetti from "canvas-confetti";
 import {
   ChevronLeft,
@@ -7,72 +17,29 @@ import {
   VolumeX,
 } from "lucide-react";
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import Header from "./components/Header";
-import Sidebar from "./components/Sidebar";
-import Wheel from "./components/Wheel";
-import WinnerPopup from "./components/WinnerPopup";
-import { NameItem } from "./types";
-
-const WHEEL_COLORS = [
-  "#f87171",
-  "#fb923c",
-  "#fbbf24",
-  "#facc15",
-  "#a3e635",
-  "#4ade80",
-  "#34d399",
-  "#2dd4bf",
-  "#22d3ee",
-  "#38bdf8",
-  "#60a5fa",
-  "#818cf8",
-  "#a78bfa",
-  "#c084fc",
-  "#e879f9",
-  "#fb7185",
-];
-
-export const MEME_IMAGES = [
-  "https://i.pinimg.com/736x/4e/af/59/4eaf59fed351916279569e565021a17f.jpg",
-];
-
-export const WINNER_MEME_IMAGES = [
-  "https://i.pinimg.com/736x/7f/a1/46/7fa1461556d737376cfb3e7ac9e649c4.jpg",
-];
-
-const WIN_SOUND_URL =
-  "https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3";
-
-const DEFAULT_NAMES =
-  "Nguyễn Văn A\nTrần Thị B\nLê Văn C\nPhạm Thị D\nHoàng Văn E";
-const STORAGE_KEY = "luckwheel_names";
-const HISTORY_STORAGE_KEY = "luckwheel_history";
-const MEME_STORAGE_KEY = "luckwheel_memes";
-const WINNER_MEME_STORAGE_KEY = "luckwheel_winner_memes";
 
 const App: React.FC = () => {
-  const [memes, setMemes] = useState<string[]>(() => {
-    const saved = localStorage.getItem(MEME_STORAGE_KEY);
-    return saved ? JSON.parse(saved) : MEME_IMAGES;
-  });
-  const [currentMemeIndex, setCurrentMemeIndex] = useState(0);
-  const currentMeme = memes[currentMemeIndex];
+  const [memes, setMemes] = useLocalStorageState(
+    StorageKey.MEME_STORAGE_KEY,
+    DefaultData.MEME_IMAGES,
+  );
+  const [winnerMemes, setWinnerMemes] = useLocalStorageState(
+    StorageKey.WINNER_MEME_STORAGE_KEY,
+    DefaultData.WINNER_MEME_IMAGES,
+  );
 
-  const [winnerMemes, setWinnerMemes] = useState<string[]>(() => {
-    const saved = localStorage.getItem(WINNER_MEME_STORAGE_KEY);
-    return saved ? JSON.parse(saved) : WINNER_MEME_IMAGES;
-  });
+  const [inputText, setInputText] = useLocalStorageState(
+    StorageKey.NAME_STORAGE_KEY,
+    DefaultData.DEFAULT_NAMES,
+  );
+  const [history, setHistory] = useLocalStorageState<string[]>(
+    StorageKey.HISTORY_STORAGE_KEY,
+    [],
+  );
+  const currentMeme = useAutoRotate(memes);
 
-  const [inputText, setInputText] = useState(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    return saved || DEFAULT_NAMES;
-  });
   const [luckyPerson, setLuckyPerson] = useState<string | null>(null);
   const [isSpinning, setIsSpinning] = useState(false);
-  const [history, setHistory] = useState<string[]>(() => {
-    const saved = localStorage.getItem(HISTORY_STORAGE_KEY);
-    return saved ? JSON.parse(saved) : [];
-  });
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [showPopup, setShowPopup] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
@@ -80,34 +47,8 @@ const App: React.FC = () => {
   const winAudio = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
-    if (memes.length <= 1) return;
-
-    const interval = setInterval(() => {
-      setCurrentMemeIndex((prev) => (prev + 1) % memes.length);
-    }, 3000);
-
-    return () => clearInterval(interval);
-  }, [memes]);
-
-  useEffect(() => {
-    localStorage.setItem(MEME_STORAGE_KEY, JSON.stringify(memes));
-  }, [memes]);
-
-  useEffect(() => {
-    localStorage.setItem(WINNER_MEME_STORAGE_KEY, JSON.stringify(winnerMemes));
-  }, [winnerMemes]);
-
-  useEffect(() => {
-    winAudio.current = new Audio(WIN_SOUND_URL);
+    winAudio.current = new Audio(DefaultData.WIN_SOUND_URL);
   }, []);
-
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, inputText);
-  }, [inputText]);
-
-  useEffect(() => {
-    localStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(history));
-  }, [history]);
 
   const nameItems = useMemo(() => {
     return inputText
@@ -221,7 +162,7 @@ const App: React.FC = () => {
         }
         winnerMemes={winnerMemes}
         addWinnerMeme={(url) => setWinnerMemes((prev) => [...prev, url])}
-        removeWinnerMemes={(index) =>
+        removeWinnerMeme={(index) =>
           setWinnerMemes((prev) => prev.filter((_, i) => i !== index))
         }
       />
@@ -248,6 +189,7 @@ const App: React.FC = () => {
               isSpinning={isSpinning}
               setIsSpinning={setIsSpinning}
               isMuted={isMuted}
+              winningAudioUrl={DefaultData.WIN_SOUND_URL}
             />
           </div>
         </div>

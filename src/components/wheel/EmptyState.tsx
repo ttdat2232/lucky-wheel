@@ -6,7 +6,7 @@ interface EmptyStateProps {
   onOpenSidebar: () => void;
 }
 
-const EmptyState: React.FC<EmptyStateProps> = ({ show, onOpenSidebar }) => {
+const EmptyState: React.FC<EmptyStateProps> = ({ show }) => {
   if (!show) return null;
 
   return (

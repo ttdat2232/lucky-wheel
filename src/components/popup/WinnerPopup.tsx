@@ -1,5 +1,5 @@
+import { PartyPopper, Trophy, X } from "lucide-react";
 import React from "react";
-import { Trophy, X, PartyPopper } from "lucide-react";
 
 interface WinnerPopupProps {
   show: boolean;
