@@ -1,6 +1,6 @@
 import { useWheelSpin } from "@/components/wheel/useWheelSpin";
 import { getFontSize, getSegmentAngle } from "@/components/wheel/wheelMath";
-import { NameItem } from "@/types/nameItem";
+import { NameItem } from "@/types/NameItem";
 import React from "react";
 
 interface WheelProps {
@@ -30,7 +30,7 @@ const Wheel: React.FC<WheelProps> = ({
   return (
     <div className="relative w-full max-w-[500px] aspect-square mx-auto">
       {/* Pointer */}
-      <div className="absolute right-0 top-1/2 -translate-y-1/2 z-40">
+      <div className="absolute right-0 top-1/2 -translate-y-1/2 z-10">
         <svg
           width="40"
           height="40"
